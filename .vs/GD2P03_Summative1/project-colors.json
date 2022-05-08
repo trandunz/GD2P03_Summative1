@@ -1,0 +1,21 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Miscellaneous Files",
+      "ColorIndex": -1
+    },
+    "4055244e-8523-4aca-af49-6bb0d8394058": {
+      "ProjectGuid": "4055244e-8523-4aca-af49-6bb0d8394058",
+      "DisplayName": "Client",
+      "ColorIndex": 0
+    },
+    "19e817e7-7f8e-4867-be1d-826ff4da50b5": {
+      "ProjectGuid": "19e817e7-7f8e-4867-be1d-826ff4da50b5",
+      "DisplayName": "Server",
+      "ColorIndex": 1
+    }
+  },
+  "NextColorIndex": 2
+}
