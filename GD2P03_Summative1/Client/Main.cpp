@@ -2,11 +2,8 @@
 int main()
 {
 	Client client;
-	
-	while (true)
-	{
-		client.Update();
-	}
+
+	while (true);
 
 	return 0;
 }

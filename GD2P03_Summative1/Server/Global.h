@@ -4,9 +4,17 @@
 #include <functional>
 #include <iostream>
 #include <stdio.h>
+#include <thread>
 #include <winsock.h>
 
 constexpr int BUFFER_SIZE = 100;
+
+struct Command
+{
+	std::string name{};
+	std::function<void(int _client, bool _finished)> function{nullptr};
+	bool immediate{ false };
+};
 
 inline void InitWSA()
 {

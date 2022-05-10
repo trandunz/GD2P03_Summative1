@@ -3,9 +3,7 @@ int main()
 {
 	Server server;
 
-	while (true)
-	{
-		server.Update();
-	}
+	while (true);
+
 	return 0;
 }

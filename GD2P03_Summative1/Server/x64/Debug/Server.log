@@ -1,17 +1,20 @@
 ﻿  Main.cpp
-C:\Users\trand\Documents\GitHub\GD2P03_Summative1\Server\Main.cpp(3,1): warning C4326: return type of 'main' should be 'int' instead of 'void'
   Server.cpp
-C:\Users\trand\Documents\GitHub\GD2P03_Summative1\Server\Server.cpp(17,19): warning C4244: 'initializing': conversion from 'SOCKET' to 'int', possible loss of data
-C:\Users\trand\Documents\GitHub\GD2P03_Summative1\Server\Server.cpp(47,27): warning C4244: '=': conversion from 'SOCKET' to 'int', possible loss of data
+D:\Users\mds00002d0\Documents\GitHub\GD2P03_Summative1\GD2P03_Summative1\Server\Server.cpp(75,25): warning C4244: '=': conversion from 'SOCKET' to 'int', possible loss of data
+D:\Users\mds00002d0\Documents\GitHub\GD2P03_Summative1\GD2P03_Summative1\Server\Server.cpp(163,27): warning C4244: '=': conversion from 'SOCKET' to 'int', possible loss of data
+D:\Users\mds00002d0\Documents\GitHub\GD2P03_Summative1\GD2P03_Summative1\Server\Server.cpp(182,54): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
   Generating Code...
-Server.obj : error LNK2019: unresolved external symbol accept referenced in function "public: void __cdecl Server::Init(void)" (?Init@Server@@QEAAXXZ)
-Server.obj : error LNK2019: unresolved external symbol bind referenced in function "public: void __cdecl Server::Init(void)" (?Init@Server@@QEAAXXZ)
+Server.obj : error LNK2019: unresolved external symbol accept referenced in function "private: void __cdecl Server::Accept(void)" (?Accept@Server@@AEAAXXZ)
+Server.obj : error LNK2019: unresolved external symbol bind referenced in function "public: void __cdecl Server::Init(int)" (?Init@Server@@QEAAXH@Z)
 Server.obj : error LNK2019: unresolved external symbol closesocket referenced in function "public: __cdecl Server::~Server(void)" (??1Server@@QEAA@XZ)
-Server.obj : error LNK2019: unresolved external symbol htons referenced in function "public: void __cdecl Server::Init(void)" (?Init@Server@@QEAAXXZ)
-Server.obj : error LNK2019: unresolved external symbol inet_ntoa referenced in function "public: void __cdecl Server::Init(void)" (?Init@Server@@QEAAXXZ)
-Server.obj : error LNK2019: unresolved external symbol listen referenced in function "public: void __cdecl Server::Init(void)" (?Init@Server@@QEAAXXZ)
+Server.obj : error LNK2019: unresolved external symbol getpeername referenced in function "private: void __cdecl Server::PrintIPSentCommand(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (?PrintIPSentCommand@Server@@AEAAXV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z)
+Server.obj : error LNK2019: unresolved external symbol htons referenced in function "public: void __cdecl Server::Init(int)" (?Init@Server@@QEAAXH@Z)
+Server.obj : error LNK2019: unresolved external symbol inet_ntoa referenced in function "private: void __cdecl Server::Accept(void)" (?Accept@Server@@AEAAXXZ)
+Server.obj : error LNK2019: unresolved external symbol listen referenced in function "private: void __cdecl Server::Listen(void)" (?Listen@Server@@AEAAXXZ)
 Server.obj : error LNK2019: unresolved external symbol recv referenced in function "public: void __cdecl Server::Update(void)" (?Update@Server@@QEAAXXZ)
-Server.obj : error LNK2019: unresolved external symbol socket referenced in function "public: void __cdecl Server::Init(void)" (?Init@Server@@QEAAXXZ)
+Server.obj : error LNK2019: unresolved external symbol send referenced in function "private: void __cdecl Server::SendMessageToClient(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >)" (?SendMessageToClient@Server@@AEAAXV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z)
+Server.obj : error LNK2019: unresolved external symbol socket referenced in function "public: void __cdecl Server::Init(int)" (?Init@Server@@QEAAXH@Z)
 Server.obj : error LNK2019: unresolved external symbol WSAStartup referenced in function "void __cdecl InitWSA(void)" (?InitWSA@@YAXXZ)
-Server.obj : error LNK2019: unresolved external symbol WSAGetLastError referenced in function "public: void __cdecl Server::Init(void)" (?Init@Server@@QEAAXXZ)
-C:\Users\trand\Documents\GitHub\GD2P03_Summative1\x64\Debug\Server.exe : fatal error LNK1120: 10 unresolved externals
+Server.obj : error LNK2019: unresolved external symbol WSACleanup referenced in function "public: __cdecl Server::~Server(void)" (??1Server@@QEAA@XZ)
+Server.obj : error LNK2019: unresolved external symbol WSAGetLastError referenced in function "private: void __cdecl Server::Accept(void)" (?Accept@Server@@AEAAXXZ)
+D:\Users\mds00002d0\Documents\GitHub\GD2P03_Summative1\GD2P03_Summative1\x64\Debug\Server.exe : fatal error LNK1120: 13 unresolved externals

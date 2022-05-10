@@ -7,19 +7,19 @@ public:
 	~Server();
 
 	void Init(int _port);
-	void Update();
 
 private:
 	void Listen();
 	void Accept();
 
-	void SendMessageToClient(std::string _message);
-	void PrintIPSentCommand(std::string _incomingCommand);
+	void SendAndRecieve(int _client);
 
-	int CheckValidCommand(std::string _incomingCommand);
+	void SendMessageToClient(int _client, std::string _message);
+	void PrintIPSentCommand(int _client, std::string _incomingCommand);
+
+	int CheckValidCommand(int _client, std::string _incomingCommand);
 
 	int m_ServerSocket;
-	int m_ListenerSocket;
 	int m_Status;
 	int m_ActiveCommandIndex{};
 	char m_Buffer[BUFFER_SIZE]{};
@@ -30,6 +30,8 @@ private:
 
 	std::string savedMessage{};
 
-	std::vector <std::pair<std::string, std::function<void(bool _finished)>>> m_Commands{};
+	std::vector<std::thread> m_ThreadPool;
+
+	std::vector <Command> m_Commands{};
 };
 
