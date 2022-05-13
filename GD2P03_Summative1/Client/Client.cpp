@@ -27,7 +27,7 @@ void Client::Init()
 		exit(-1);
 	}
 
-	auto error{0};
+	/*auto error{0};
 	auto status{0};
 	u_short preferedPort = 7000;
 	do
@@ -54,9 +54,18 @@ void Client::Init()
 			preferedPort++;
 		}
 		
-	} while (error == WSAEADDRINUSE);
+	} while (error == WSAEADDRINUSE);*/
 
-	ConnectToServer("127.0.0.1");
+
+	std::string ip;
+	printf("Enter Server IP: ");
+	std::cin >> ip;
+
+	int port;
+	printf("Enter Server Port: ");
+	std::cin >> port;
+
+	ConnectToServer(ip, std::move(port));
 	if (m_IsConnected)
 	{
 		m_ThreadPool.emplace_back(std::thread(&Client::RecieveFromServer, this));
@@ -77,9 +86,6 @@ void Client::RecieveFromServer()
 	{
 		status = recv(m_ClientSocket, m_InBuffer, BUFFER_SIZE, 0);
 
-		if (sizeof(m_InBuffer) / sizeof(char) > status)
-			m_InBuffer[status] = '\0';
-		
 		if (WSAGetLastError() == WSAECONNRESET)
 		{
 			printf("Client: Disconnection From Server %s\n", GetIpFromSocket(m_ClientSocket));
@@ -92,7 +98,13 @@ void Client::RecieveFromServer()
 			printf("recv Error!\n");
 			return;
 		}
-		printf("%s\n", m_InBuffer);
+		else
+		{
+			if (sizeof(m_InBuffer) / sizeof(char) > status)
+				m_InBuffer[status] = '\0';
+
+			printf("%s\n", m_InBuffer);
+		}
 	} while (status > 0);
 }
 
@@ -123,11 +135,11 @@ void Client::SendToServer()
 	} while (true);
 }
 
-void Client::ConnectToServer(std::string _ip)
+void Client::ConnectToServer(std::string _ip, u_short&& _port)
 {
 	sockaddr_in receiverAddr;
 	receiverAddr.sin_family = AF_INET;
-	receiverAddr.sin_port = htons(5001);
+	receiverAddr.sin_port = htons(_port);
 	receiverAddr.sin_addr.s_addr = inet_addr(_ip.data());
 	
 	printf("Attempting Connection To %s\n", _ip.c_str());

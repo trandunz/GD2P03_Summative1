@@ -12,7 +12,7 @@ private:
 	void RecieveFromServer();
 	void SendToServer();
 
-	void ConnectToServer(std::string _ip);
+	void ConnectToServer(std::string _ip, u_short&& _port);
 	char* GetIpFromSocket(int _socket);
 
 	bool ReconnectionCheck(char _input);

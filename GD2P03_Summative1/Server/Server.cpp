@@ -46,7 +46,11 @@ Server::Server()
 			exit(0);
 		}, true });
 
-	Init(5001);
+	printf("Enter Server Port: ");
+	int port;
+	std::cin >> port;
+
+	Init(port);
 }
 
 Server::~Server()
