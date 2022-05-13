@@ -1,0 +1,22 @@
+Uniform Initialization (e.g sockaddr_in serverAddr { AF_INET , htons(_port), INADDR_ANY };) - 1
+
+std::vector::emplace_back (e.g m_ConnectedSockets.emplace_back(client);) - 2
+
+lambda's (e.g [this](int _client,bool _finished) - 3
+			{
+				Sleep(1000);
+				exit(0);
+			};)
+			
+constexpr (e.g constexpr int BUFFER_SIZE = 100;) - 4
+
+Range-based for loop (e.g for (auto& thread : m_ThreadPool) - 5
+						{
+							if (thread.joinable())
+								thread.join();
+						})
+						
+std::function (e.g std::function<void(int _client, bool _finished)> function{nullptr};) - 6
+
+alias declaration (e.g using commandFunction = std::function<void(int _client, bool _finished)>;) - 7
+auto (e.g auto wVersionRequested = MAKEWORD(1, 1);) - 8

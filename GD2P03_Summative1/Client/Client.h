@@ -7,10 +7,15 @@ public:
 	~Client();
 
 private:
+	void Init();
+
 	void RecieveFromServer();
 	void SendToServer();
 
 	void ConnectToServer(std::string _ip);
+	char* GetIpFromSocket(int _socket);
+
+	bool ReconnectionCheck(char _input);
 
 	int m_ClientSocket;
 	int m_Status;

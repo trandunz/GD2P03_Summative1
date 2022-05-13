@@ -9,6 +9,7 @@ public:
 	void Init(int _port);
 
 private:
+
 	void Listen();
 	void Accept();
 
@@ -18,6 +19,8 @@ private:
 	void PrintIPSentCommand(int _client, std::string _incomingCommand);
 
 	int CheckValidCommand(int _client, std::string _incomingCommand);
+
+	char* GetIpFromSocket(int _socket);
 
 	int m_ServerSocket;
 	int m_Status;
@@ -30,6 +33,7 @@ private:
 
 	std::string savedMessage{};
 
+	std::vector<int> m_ConnectedSockets;
 	std::vector<std::thread> m_ThreadPool;
 
 	std::vector <Command> m_Commands{};

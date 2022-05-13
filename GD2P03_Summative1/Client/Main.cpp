@@ -3,7 +3,9 @@ int main()
 {
 	Client client;
 
-	while (true);
+	while (true)
+	{
+	}
 
 	return 0;
 }

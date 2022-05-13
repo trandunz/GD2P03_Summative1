@@ -3,7 +3,9 @@ int main()
 {
 	Server server;
 
-	while (true);
+	while (true)
+	{
+	}
 
 	return 0;
 }

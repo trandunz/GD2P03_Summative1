@@ -3,6 +3,7 @@
 Server::Server()
 {
 	InitWSA();
+
 	m_Commands.emplace_back(Command{ "CAPITALIZE", [this](int _client,bool _finished)
 		{
 			if (_finished)
@@ -27,6 +28,7 @@ Server::Server()
 			if (_finished)
 			{
 				savedMessage.pop_back();
+				SendMessageToClient(_client, "200 OK");
 			}
 			else
 			{
@@ -36,28 +38,14 @@ Server::Server()
 		} });
 	m_Commands.emplace_back(Command{ "GET", [this](int _client,bool _finished)
 		{
-			if (_finished)
-			{
-				SendMessageToClient(_client,savedMessage);
-			}
-			else
-			{
-				SendMessageToClient(_client,savedMessage);
-			}
+			SendMessageToClient(_client,savedMessage);
 		}, true });
 	m_Commands.emplace_back(Command{ "QUIT", [this](int _client,bool _finished)
 		{
-			if (_finished)
-			{
-				SendMessageToClient(_client,"QUIT");
-				exit(0);
-			}
-			else
-			{
-				SendMessageToClient(_client,"QUIT");
-				exit(0);
-			}
+			Sleep(1000);
+			exit(0);
 		}, true });
+
 	Init(5001);
 }
 
@@ -69,6 +57,11 @@ Server::~Server()
 			thread.join();
 	}
 	m_ThreadPool.clear();
+
+	for (auto& socket : m_ConnectedSockets)
+	{
+		closesocket(socket);
+	}
 	closesocket(m_ServerSocket);
 	WSACleanup();
 }
@@ -86,7 +79,7 @@ void Server::Init(int _port)
 	// Uniform Initialization
 	struct sockaddr_in serverAddr { AF_INET , htons(_port), INADDR_ANY };
 
-	m_Status = bind(m_ServerSocket, (struct sockaddr*)&serverAddr, sizeof(struct sockaddr));
+	m_Status = bind(m_ServerSocket, (sockaddr*)&serverAddr, sizeof(sockaddr));
 	if (m_Status == 1)
 	{
 		printf("Error: Bind() failed. Code: %d\n", WSAGetLastError());
@@ -113,36 +106,41 @@ void Server::Accept()
 {
 	struct sockaddr_in senderAddr;
 	int length = sizeof(senderAddr);
-	int client{ 0 };
-	while (client = accept(m_ServerSocket, (struct sockaddr*)&senderAddr, &length))
+	auto client{ 0 };
+	while (client = accept(m_ServerSocket, (sockaddr*)&senderAddr, &length))
 	{
 		if (client == INVALID_SOCKET)
 		{
 			printf("Invalid Client Socket\n");
 			continue;
 		}
+		m_ConnectedSockets.emplace_back(client);
 		m_ThreadPool.emplace_back(std::thread(&Server::SendAndRecieve, this, client));
 	}
 }
 
 void Server::SendAndRecieve(int _client)
 {
-	printf("A Connection from IP has been accepted\n");
+	printf("Server: Connection From Client %s\n", GetIpFromSocket(_client));
+	SendMessageToClient(_client, "Server is ready...");
 
-	while (m_Status = recv(_client, m_Buffer, BUFFER_SIZE, 0))
+	auto status{0};
+	while (status = recv(_client, m_Buffer, BUFFER_SIZE, 0))
 	{
-		if (sizeof(m_Buffer) / sizeof(char) > m_Status)
-			m_Buffer[m_Status] = '\0';
+		if (sizeof(m_Buffer) / sizeof(char) > status)
+			m_Buffer[status] = '\0';
 
-		if (m_Status == 0)
-		{
-			printf("Error: Client Disconnected\n");
-			return;
-		}
-		else if (m_Status == -1)
+		if (status == -1)
 		{
 			int error = WSAGetLastError();
-			printf("Error: recv() failed. Code: %d\n", error);
+			if (error == WSAECONNRESET)
+			{
+				printf("Server: Disconnection From Client %s\n", GetIpFromSocket(_client));
+			}
+			else
+			{
+				printf("Error: recv() failed. Code: %d\n", error);
+			}
 			return;
 		}
 		else
@@ -181,13 +179,13 @@ void Server::PrintIPSentCommand(int _client, std::string _incomingCommand)
 {
 	SOCKADDR_IN client_info{ 0 };
 	int size = sizeof(client_info);
-	getpeername(_client, (struct sockaddr*)&client_info, &size);
+	getpeername(_client, (sockaddr*)&client_info, &size);
 	std::cout << inet_ntoa(client_info.sin_addr) << " sends " << _incomingCommand << std::endl;
 }
 
 int Server::CheckValidCommand(int _client,std::string _incomingCommand)
 {
-	int i = 0;
+	int i{ 0 };
 	for (auto& command : m_Commands)
 	{
 		if (_incomingCommand == command.name)
@@ -211,4 +209,12 @@ int Server::CheckValidCommand(int _client,std::string _incomingCommand)
 	}
 	SendMessageToClient(_client,"400 Command not valid.");
 	return -1;
+}
+
+char* Server::GetIpFromSocket(int _socket)
+{
+	SOCKADDR_IN client_info = { 0 };
+	int addrsize = sizeof(client_info);
+	getpeername(_socket, (sockaddr*)&client_info, &addrsize);
+	return inet_ntoa(client_info.sin_addr);
 }

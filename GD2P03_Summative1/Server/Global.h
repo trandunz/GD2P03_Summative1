@@ -7,23 +7,21 @@
 #include <thread>
 #include <winsock.h>
 
+using CommandFunction = std::function<void(int _client, bool _finished)>;
 constexpr int BUFFER_SIZE = 100;
 
 struct Command
 {
 	std::string name{};
-	std::function<void(int _client, bool _finished)> function{nullptr};
+	CommandFunction function{nullptr};
 	bool immediate{ false };
 };
 
 inline void InitWSA()
 {
-	WORD wVersionRequested;
 	WSADATA wsaData;
-	wVersionRequested = MAKEWORD(1, 1);
-
-	int nRc = WSAStartup(wVersionRequested, &wsaData);
-
+	auto wVersionRequested = MAKEWORD(1, 1);
+	auto nRc = WSAStartup(wVersionRequested, &wsaData);
 	if (nRc != 0)
 	{
 		fprintf(stderr, "Error: WSAStartup Failed\n");

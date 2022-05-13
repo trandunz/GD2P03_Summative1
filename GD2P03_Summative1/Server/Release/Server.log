@@ -1,0 +1,7 @@
+﻿  Main.cpp
+  Server.cpp
+  Generating code
+  Previous IPDB not found, fall back to full compilation.
+  All 394 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  Server.vcxproj -> C:\Users\trand\Documents\GitHub\GD2P03_Summative1\GD2P03_Summative1\Release\Server.exe
