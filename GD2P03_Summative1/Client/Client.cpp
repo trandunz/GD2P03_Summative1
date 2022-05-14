@@ -27,45 +27,10 @@ void Client::Init()
 		exit(-1);
 	}
 
-	/*auto error{0};
-	auto status{0};
-	u_short preferedPort = 7000;
-	do
-	{
-		sockaddr_in clientAddr { AF_INET, htons(preferedPort), INADDR_ANY };
-
-		status = bind(m_ClientSocket, (sockaddr*)&clientAddr, sizeof(sockaddr));
-
-		if (status == -1)
-		{
-			error = WSAGetLastError();
-			if (error == WSAEADDRINUSE)
-			{
-				printf("Error: Port %i Already In Use. Reattempting With Port %i\n", preferedPort, preferedPort + 1);
-			}
-			else if (error == WSAEINVAL)
-			{
-				printf("Error: Invalid Bind Argument. Multiple Instances Running On Same Machine?\n");
-			}
-			else
-			{
-				printf("Error: Bind() failed. Code: %d\n", WSAGetLastError());
-			}
-			preferedPort++;
-		}
-		
-	} while (error == WSAEADDRINUSE);*/
-
-
-	std::string ip;
 	printf("Enter Server IP: ");
-	std::cin >> ip;
+	std::cin >> m_ServerIP;
 
-	int port;
-	printf("Enter Server Port: ");
-	std::cin >> port;
-
-	ConnectToServer(ip, std::move(port));
+	ConnectToServer(m_ServerIP, 5000);
 	if (m_IsConnected)
 	{
 		m_ThreadPool.emplace_back(std::thread(&Client::RecieveFromServer, this));
@@ -88,7 +53,7 @@ void Client::RecieveFromServer()
 
 		if (WSAGetLastError() == WSAECONNRESET)
 		{
-			printf("Client: Disconnection From Server %s\n", GetIpFromSocket(m_ClientSocket));
+			printf("Client: Disconnection From Server %s\n", GetIpFromSocket(std::move(m_ClientSocket)));
 			m_IsConnected = false;
 			printf("Would You Like To Retry Connection? (1/0)\n");
 			return;
@@ -111,26 +76,34 @@ void Client::RecieveFromServer()
 void Client::SendToServer()
 {
 	auto status{0};
+	bool finishedMessage{ false };
+	std::string message{};
 	do
 	{
 		if (m_IsConnected)
 		{
-			gets_s(m_OutBuffer);
+			std::cin >> message;
+			if (message.length() >= BUFFER_SIZE - 1)
+			{
+				message.erase(BUFFER_SIZE - 1);
+			}
+			message.shrink_to_fit();
+			strcpy_s(m_OutBuffer, message.c_str());
 
-			if (ReconnectionCheck(m_OutBuffer[0]))
+			if (ReconnectionCheck(std::move(m_OutBuffer[0])))
 				return;
-		}
 
-		status = send(m_ClientSocket, m_OutBuffer, strlen(m_OutBuffer), 0);
-		if (status == -1)
-		{
-			printf("Send Error!\n");
-			return;
-		}
-		if ((std::string)m_OutBuffer == "QUIT")
-		{
-			Sleep(1000);
-			exit(0);
+			status = send(m_ClientSocket, m_OutBuffer, strlen(m_OutBuffer), 0);
+			if (status == -1)
+			{
+				printf("Send Error!\n");
+				return;
+			}
+			if ((std::string)m_OutBuffer == "QUIT")
+			{
+				Sleep(1000);
+				exit(0);
+			}
 		}
 	} while (true);
 }
@@ -155,7 +128,7 @@ void Client::ConnectToServer(std::string _ip, u_short&& _port)
 	}
 }
 
-char* Client::GetIpFromSocket(int _socket)
+char* Client::GetIpFromSocket(int&& _socket)
 {
 	SOCKADDR_IN client_info = { 0 };
 	int addrsize = sizeof(client_info);
@@ -163,11 +136,10 @@ char* Client::GetIpFromSocket(int _socket)
 	return inet_ntoa(client_info.sin_addr);
 }
 
-bool Client::ReconnectionCheck(char _input)
+bool Client::ReconnectionCheck(char&& _input)
 {
 	if (!m_IsConnected)
 	{
-		
 		if (_input == '1')
 		{
 			closesocket(m_ClientSocket);

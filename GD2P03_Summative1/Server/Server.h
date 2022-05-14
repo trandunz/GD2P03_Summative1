@@ -18,7 +18,7 @@ private:
 	void SendMessageToClient(int _client, std::string _message);
 	void PrintIPSentCommand(int _client, std::string _incomingCommand);
 
-	int CheckValidCommand(int _client, std::string _incomingCommand);
+	int CheckValidCommand(int _client, char* _buffer, bool& _executingCommand,std::string _incomingCommand);
 
 	char* GetIpFromSocket(int _socket);
 
@@ -31,11 +31,9 @@ private:
 	bool m_IsExecutingCommand = false;
 	std::string ActiveCommand{};
 
-	std::string savedMessage{};
+	std::map<int, std::string> m_SavedMesssages{};
 
-	std::vector<int> m_ConnectedSockets;
 	std::vector<std::thread> m_ThreadPool;
 
 	std::vector <Command> m_Commands{};
 };
-

@@ -6,8 +6,9 @@
 #include <stdio.h>
 #include <thread>
 #include <winsock.h>
+#include <map>
 
-using CommandFunction = std::function<void(int _client, bool _finished)>;
+using CommandFunction = std::function<void(int _client, char* _buffer, bool _finished)>;
 constexpr int BUFFER_SIZE = 100;
 
 struct Command

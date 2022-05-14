@@ -13,12 +13,13 @@ private:
 	void SendToServer();
 
 	void ConnectToServer(std::string _ip, u_short&& _port);
-	char* GetIpFromSocket(int _socket);
+	char* GetIpFromSocket(int&& _socket);
 
-	bool ReconnectionCheck(char _input);
+	bool ReconnectionCheck(char&& _input);
 
-	int m_ClientSocket;
-	int m_Status;
+	int m_ClientSocket{};
+	int m_ServerPort{};
+	std::string m_ServerIP{};
 	char m_InBuffer[BUFFER_SIZE]{};
 	char m_OutBuffer[BUFFER_SIZE]{};
 
@@ -27,6 +28,5 @@ private:
 	bool m_IsConnected{ false };
 
 	std::vector<std::thread> m_ThreadPool;
-	bool m_ServerWaitingForCommand = true;
 };
 
